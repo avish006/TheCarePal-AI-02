@@ -11,6 +11,7 @@ CarePal Vitals Review is a synthetic-data demo for TheCarePal AI/ML internship a
 - **Review queue** prioritizes red Review alerts, then amber Early warnings. The Incomplete filter shows everyone missing a reading for the selected date, including patients with an alert.
 - **Patient details** show recorded and missing vitals and why the assessment was made. The trend chart marks the exact dates of alerts. Select a flagged date to open that day's assessment. Blank measurements leave a gap in the line.
 - **Check patient readings** accepts a synthetic ID and dated measurements, then gives one assessment for the latest date. Use **Load example** to try a four-day oxygen decline. The browser processes the readings locally.
+- **Technical dashboard** compares held-out test and validation metrics across all five approaches. Its prediction table covers every synthetic patient and date, with the training split, injected episode label, raw model scores, and alert decisions. Scores use each detector's own threshold. [Open the technical dashboard](https://avish006.github.io/TheCarePal-AI-02/#technical)
 
 ## How the nurse assessment is made
 
@@ -25,7 +26,7 @@ The explanation discloses the measurements and clinical limits involved, the cha
 
 ## Technical scoring methods
 
-The notebook, model configuration, and evaluation tables are kept here in the repository.
+The technical dashboard presents the released benchmark and day-wise scores. The notebook, model configuration, and source evaluation tables are in this repository.
 
 | Method | How it scores | What the dashboard explains |
 | --- | --- | --- |

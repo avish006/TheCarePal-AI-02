@@ -27,12 +27,25 @@
     cohort: null, bundle: null, date: null, selected: null, patients: [], loading: false,
     vital: "systolic_mmhg", lookback: 14, daily: new Map(), explanations: new Map(),
   };
+  const views = ["monitoring", "intake", "technical"];
+  let cohortRequest;
+
+  function loadCohort() {
+    cohortRequest ??= fetch("./data/cohort.json").then(response => {
+      if (!response.ok) throw new Error("The patient readings could not be loaded.");
+      return response.json();
+    }).catch(error => {
+      cohortRequest = undefined;
+      throw error;
+    });
+    return cohortRequest;
+  }
 
   function changeView() {
     const hash = location.hash.slice(1);
-    const onIntake = hash === "intake" || (hash === "main" && !byId("intake-panel").hidden);
-    const active = onIntake ? "intake" : "monitoring";
-    for (const view of ["monitoring", "intake"]) {
+    const active = views.includes(hash) ? hash : hash === "main"
+      ? views.find(view => !byId(view + "-panel").hidden) ?? "monitoring" : "monitoring";
+    for (const view of views) {
       const selected = view === active;
       byId(view + "-panel").hidden = !selected;
       const link = document.querySelector(`[data-view="${view}"]`);
@@ -40,6 +53,7 @@
       else link.removeAttribute("aria-current");
     }
     if (active === "monitoring" && !state.cohort) loadDashboard();
+    if (active === "technical") globalThis.CareTechnical.open(loadCohort);
   }
 
   function readingsThrough(patient, date) {
@@ -195,10 +209,7 @@
     status.textContent = "Loading the review queue…";
     try {
       const [cohort, bundle] = await Promise.all([
-        fetch("./data/cohort.json").then(response => {
-          if (!response.ok) throw new Error("The patient readings could not be loaded.");
-          return response.json();
-        }),
+        loadCohort(),
         globalThis.CareModels.load(),
       ]);
       state.cohort = cohort;

@@ -1,4 +1,4 @@
-"""Prepare the synthetic cohort for the nurse dashboard."""
+"""Prepare synthetic readings and the released benchmark for the dashboard."""
 
 import argparse
 from datetime import date, timedelta
@@ -37,9 +37,33 @@ def export_data(data_dir, output_dir):
     write_json(output_dir / "cohort.json", {"dates": calendar, "patients": list(patients.values())})
 
 
+def export_benchmark(data_dir, artifacts_dir, output_dir):
+    config = json.loads((artifacts_dir / "training_config.json").read_text(encoding="utf-8"))
+    metrics = [
+        {key: value if key in {"split", "model"} else float(value) for key, value in row.items()}
+        for row in read_rows(artifacts_dir / "model_comparison.csv")
+    ]
+    by_type = [
+        {key: value if key in {"split", "model", "event_type"} else int(value)
+         for key, value in row.items()}
+        for row in read_rows(artifacts_dir / "episodes_by_type.csv")
+    ]
+    write_json(output_dir / "evaluation.json", {
+        "metrics": metrics, "by_type": by_type,
+        "patient_splits": {patient: split for split, patients in config["patients"].items()
+                           for patient in patients},
+        "split_counts": {key: len(value) for key, value in config["patients"].items()},
+        "calibration_days": config["calibration_days"],
+        "false_alert_budget": config["validation_false_alert_budget_per_patient_week"],
+        "events": read_rows(data_dir / "events.csv"),
+    })
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--data-dir", type=Path, default=ROOT / "data")
     parser.add_argument("--output-dir", type=Path, default=ROOT / "dist" / "data")
+    parser.add_argument("--artifacts-dir", type=Path, default=ROOT / "models")
     args = parser.parse_args()
     export_data(args.data_dir, args.output_dir)
+    export_benchmark(args.data_dir, args.artifacts_dir, args.output_dir)
