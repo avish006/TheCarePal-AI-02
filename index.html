@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#113f39">
+  <meta name="description" content="Daily synthetic patient vitals and early warning signals for home care teams.">
+  <title>Daily monitoring · CarePal</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to monitoring</a>
+  <header class="mast">
+    <div class="mast-inner">
+      <div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M3 17h6l3-9 6 17 4-12 2 4h5"/></svg></span><span>CarePal</span></div>
+      <span class="mast-label">Home monitoring</span>
+      <span class="demo"><i></i>Synthetic cohort</span>
+    </div>
+  </header>
+  <main id="main">
+    <section class="heading">
+      <div><h1>Daily monitoring</h1><p id="day-caption">Patient vitals and review priorities</p></div>
+      <label class="date-wrap">Review date<select id="review-date" disabled><option>Loading dates…</option></select></label>
+    </section>
+    <div id="status" class="status" role="status">Loading patient observations…</div>
+    <div id="workspace" hidden>
+      <section id="summary" class="summary" aria-label="Filter patients by review priority"></section>
+      <div class="work-grid">
+        <section id="queue" class="panel queue" aria-labelledby="queue-title">
+          <div class="queue-top"><div class="title-row"><h2 id="queue-title">Patient queue</h2><span id="queue-count" class="count"></span></div><p>Highest risk first</p></div>
+          <div class="controls">
+            <label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 5 5"/></svg><input id="search" type="search" aria-label="Search patients by ID" placeholder="Search patient ID"></label>
+            <label class="sr-only" for="level">Priority filter</label><select id="level"><option value="">All priorities</option><option>Review</option><option>Watch</option><option>Routine</option><option>Incomplete</option></select>
+          </div>
+          <div class="queue-labels" aria-hidden="true"><span>Patient</span><span>Daily assessment</span><span>Score</span></div>
+          <div id="patient-rows" class="patient-rows" aria-label="Patients sorted by daily risk" tabindex="0"></div>
+        </section>
+        <section id="details" class="panel details" aria-label="Selected patient" tabindex="-1"></section>
+      </div>
+    </div>
+    <footer><span class="footer-mark" aria-hidden="true">+</span><span>Decision support for the care team. This synthetic demo does not diagnose conditions or replace clinical judgment.</span></footer>
+  </main>
+</body>
+</html>
