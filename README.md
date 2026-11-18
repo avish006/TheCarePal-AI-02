@@ -6,6 +6,11 @@ CarePal Vitals Review is a synthetic-data demo for TheCarePal AI/ML internship a
 
 ![Nurse dashboard showing review priorities, incomplete readings, and dated alerts on a vital chart](docs/dashboard.png)
 
+
+https://github.com/user-attachments/assets/5cd39458-b7ee-4feb-86f9-a2c51f0fbcd6
+
+
+
 ## Try the demo
 
 - **Review queue** prioritizes red Review alerts, then amber Early warnings. The Incomplete filter shows everyone missing a reading for the selected date, including patients with an alert.
