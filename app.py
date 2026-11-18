@@ -29,8 +29,13 @@ class Dashboard:
         return {"date": stamp, "dates": self.dates, "patients": patients}
 
 
-ASSETS = {"/": ("index.html", "text/html"), "/app.js": ("app.js", "text/javascript"),
-          "/styles.css": ("styles.css", "text/css")}
+ASSETS = {
+    "/": ("index.html", "text/html"),
+    **{f"/{name}": (name, "text/javascript") for name in ("app.js", "models.js", "intake.js")},
+    **{f"/{name}": (name, "text/css") for name in ("styles.css", "intake.css")},
+    **{f"/data/{name}": (f"data/{name}", "application/json")
+       for name in ("cohort.json", "models.json", "evaluation.json")},
+}
 
 
 class Handler(BaseHTTPRequestHandler):

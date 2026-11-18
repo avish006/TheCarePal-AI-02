@@ -3,43 +3,88 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#113f39">
-  <meta name="description" content="Daily synthetic patient vitals and early warning signals for home care teams.">
-  <title>Daily monitoring · CarePal</title>
-  <link rel="stylesheet" href="/styles.css">
-  <script src="/app.js" defer></script>
+  <meta name="theme-color" content="#123b32">
+  <meta name="description" content="Explore and score synthetic patient vitals with CarePal's early warning dashboard.">
+  <title>CarePal | Vitals monitoring</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./intake.css">
+  <script src="./models.js" defer></script>
+  <script src="./app.js" defer></script>
+  <script src="./intake.js" defer></script>
 </head>
 <body>
-  <a class="skip" href="#main">Skip to monitoring</a>
+  <a class="skip" href="#main">Skip to main content</a>
   <header class="mast">
     <div class="mast-inner">
-      <div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M3 17h6l3-9 6 17 4-12 2 4h5"/></svg></span><span>CarePal</span></div>
-      <span class="mast-label">Home monitoring</span>
-      <span class="demo"><i></i>Synthetic cohort</span>
+      <a class="brand" href="#monitoring" aria-label="CarePal home">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M3 17h6l3-9 6 17 4-12 2 4h5"/></svg></span>
+        <span>CarePal</span>
+      </a>
+      <nav class="primary-nav" aria-label="Workspace">
+        <a href="#monitoring" data-view="monitoring" aria-current="page">Patient monitoring</a>
+        <a href="#intake" data-view="intake">Score a patient</a>
+        <a href="#evaluation" data-view="evaluation">Evaluation</a>
+      </nav>
+      <span class="demo"><span aria-hidden="true"></span>Synthetic data</span>
     </div>
   </header>
   <main id="main">
-    <section class="heading">
-      <div><h1>Daily monitoring</h1><p id="day-caption">Patient vitals and review priorities</p></div>
-      <label class="date-wrap">Review date<select id="review-date" disabled><option>Loading dates…</option></select></label>
-    </section>
-    <div id="status" class="status" role="status">Loading patient observations…</div>
-    <div id="workspace" hidden>
-      <section id="summary" class="summary" aria-label="Filter patients by review priority"></section>
-      <div class="work-grid">
-        <section id="queue" class="panel queue" aria-labelledby="queue-title">
-          <div class="queue-top"><div class="title-row"><h2 id="queue-title">Patient queue</h2><span id="queue-count" class="count"></span></div><p>Highest risk first</p></div>
-          <div class="controls">
-            <label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 5 5"/></svg><input id="search" type="search" aria-label="Search patients by ID" placeholder="Search patient ID"></label>
-            <label class="sr-only" for="level">Priority filter</label><select id="level"><option value="">All priorities</option><option>Review</option><option>Watch</option><option>Routine</option><option>Incomplete</option></select>
+    <section id="monitoring-panel" aria-labelledby="monitoring-title">
+      <header class="heading">
+        <div>
+          <h1 id="monitoring-title">Patient monitoring</h1>
+          <p id="day-caption">Review daily readings and explore the reasons behind alerts.</p>
+        </div>
+        <label class="date-wrap" for="review-date">Review date
+          <select id="review-date" disabled><option>Loading dates…</option></select>
+        </label>
+      </header>
+      <div id="status" class="status" role="status">Loading patient readings and trained models…</div>
+      <div id="workspace" hidden>
+        <div class="model-selector">
+          <div class="model-selector-head">
+            <h2 id="model-label">Scoring model</h2>
+            <p id="model-description"></p>
           </div>
-          <div class="queue-labels" aria-hidden="true"><span>Patient</span><span>Daily assessment</span><span>Score</span></div>
-          <div id="patient-rows" class="patient-rows" aria-label="Patients sorted by daily risk" tabindex="0"></div>
+          <div id="model-tabs" class="model-tabs" role="tablist" aria-labelledby="model-label"></div>
+        </div>
+        <section id="model-panel" role="tabpanel" tabindex="0">
+          <div id="summary" class="summary" aria-label="Filter patients by alert status"></div>
+          <div class="work-grid">
+            <section id="queue" class="panel queue" aria-labelledby="queue-title">
+              <div class="queue-top">
+                <div class="title-row"><h2 id="queue-title">Patient queue</h2><span id="queue-count" class="count"></span></div>
+                <p>Review alerts first, then highest scores.</p>
+              </div>
+              <div class="controls">
+                <label class="search">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 5 5"/></svg>
+                  <input id="search" type="search" aria-label="Search patients by ID" placeholder="Search by patient ID">
+                </label>
+                <label class="sr-only" for="level">Alert status</label>
+                <select id="level"><option value="">All statuses</option><option>Review</option><option>Below threshold</option><option>Incomplete</option></select>
+              </div>
+              <div class="queue-labels" aria-hidden="true"><span>Patient</span><span>Assessment</span><span>Score</span></div>
+              <div id="patient-rows" class="patient-rows" aria-label="Patients ranked for review" tabindex="0"></div>
+            </section>
+            <section id="details" class="panel details" aria-label="Selected patient" tabindex="-1"></section>
+          </div>
         </section>
-        <section id="details" class="panel details" aria-label="Selected patient" tabindex="-1"></section>
       </div>
-    </div>
-    <footer><span class="footer-mark" aria-hidden="true">+</span><span>Decision support for the care team. This synthetic demo does not diagnose conditions or replace clinical judgment.</span></footer>
+    </section>
+    <section id="intake-panel" aria-labelledby="intake-title" hidden>
+      <header class="heading">
+        <div><h1 id="intake-title">Score a patient</h1><p>Enter dated synthetic readings to compare the latest assessment across all five scoring methods.</p></div>
+      </header>
+      <div id="intake-root"></div>
+    </section>
+    <section id="evaluation-panel" aria-labelledby="evaluation-title" hidden>
+      <header class="heading">
+        <div><h1 id="evaluation-title">Model evaluation</h1><p>Compare detection performance on held-out synthetic patients.</p></div>
+      </header>
+      <div id="evaluation-content" aria-live="polite"></div>
+    </section>
+    <footer><span>For synthetic data exploration and education. This demonstration does not diagnose conditions or replace clinical judgment.</span></footer>
   </main>
 </body>
 </html>
