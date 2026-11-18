@@ -31,10 +31,11 @@ class Dashboard:
 
 ASSETS = {
     "/": ("index.html", "text/html"),
-    **{f"/{name}": (name, "text/javascript") for name in ("app.js", "models.js", "intake.js")},
-    **{f"/{name}": (name, "text/css") for name in ("styles.css", "intake.css")},
+    **{f"/{name}": (name, "text/javascript")
+       for name in ("app.js", "models.js", "triage.js", "vital-chart.js", "intake.js")},
+    **{f"/{name}": (name, "text/css") for name in ("styles.css", "vital-chart.css", "intake.css")},
     **{f"/data/{name}": (f"data/{name}", "application/json")
-       for name in ("cohort.json", "models.json", "evaluation.json")},
+       for name in ("cohort.json", "models.json")},
 }
 
 

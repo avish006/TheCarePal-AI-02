@@ -1,28 +1,41 @@
 # CarePal Vitals Review
 
-CarePal Vitals Review is a synthetic-data demo for TheCarePal AI/ML internship assignment AI-02. A care-team reviewer can open a date, switch between five scoring methods, and see which readings put a patient in the review queue. The prototype is for decision support and does not diagnose conditions or replace clinical judgment.
+CarePal Vitals Review is a synthetic-data demo for TheCarePal AI/ML internship assignment AI-02. A nurse can open a date, see who needs review, and check the readings behind each alert. The prototype is for decision support and does not diagnose conditions or replace clinical judgment.
 
 **[Open the live demo](https://avish006.github.io/TheCarePal-AI-02/)** · [Training notebook](train_kaggle.ipynb) · [Evaluation results](models/model_comparison.csv)
 
-![Vitals dashboard showing the model tabs, patient queue, and score explanation](docs/dashboard.png)
+![Nurse dashboard showing review priorities, incomplete readings, and dated alerts on a vital chart](docs/dashboard.png)
 
 ## Try the demo
 
-- **Patient queue** ranks 50 synthetic patients by the selected scoring method. Choose a patient to see the reason for their score, missing readings, and recent trends.
-- **Score a patient** accepts a synthetic ID and a list of dated measurements. Use **Load example** to try a four-day oxygen decline. The form scores the latest date against all five methods, using earlier rows as context. The browser processes the entered readings locally.
-- **Evaluation** shows performance on separate validation and test patients, including detection before the planned peak of a gradual episode.
+- **Review queue** prioritizes red Review alerts, then amber Early warnings. The Incomplete filter shows everyone missing a reading for the selected date, including patients with an alert.
+- **Patient details** show recorded and missing vitals and why the assessment was made. The trend chart marks the exact dates of alerts. Select a flagged date to open that day's assessment. Blank measurements leave a gap in the line.
+- **Check patient readings** accepts a synthetic ID and dated measurements, then gives one assessment for the latest date. Use **Load example** to try a four-day oxygen decline. The browser processes the readings locally.
 
-## Scoring methods
+## How the nurse assessment is made
+
+| Status | Conditions for the selected date |
+| --- | --- |
+| **Review** | An existing higher-priority clinical limit was crossed, or the recent readings met the trained ensemble's review threshold. |
+| **Early warning** | A recorded reading crossed a standard clinical alert limit and the Review conditions did not apply. |
+| **Incomplete** | At least one expected measurement is missing. An alert based on the recorded measurements stays visible alongside this label. |
+| **No alert** | All six measurements were recorded and the available evidence produced no alert. |
+
+The explanation discloses the measurements and clinical limits involved, the changes that contributed to a pattern alert, and the patient's usual value where available. The colors on individual vital cards distinguish a crossed clinical limit from evidence that contributed to a pattern alert. A history with fewer than **four measured days in the last 14 days** uses the recorded readings and clinical limits. This gives nurses a usable result for a first entry while the trend assessment waits for more data.
+
+## Technical scoring methods
+
+The notebook, model configuration, and evaluation tables are kept here in the repository.
 
 | Method | How it scores | What the dashboard explains |
 | --- | --- | --- |
-| Clinical rules | Published vital-sign thresholds | The reading and threshold that triggered review |
+| Clinical rules | Published vital-sign thresholds | The measured value and relevant limit |
 | Statistical baseline | Each patient's median, median absolute deviation, and recent sustained change | The reading and the patient's usual value |
 | XGBoost | Learns labeled event-day patterns from current readings, changes, and rolling summaries | Feature contributions to that score |
 | GRU autoencoder | Learns to reconstruct ordinary 14-day sequences. The largest standardized squared error among today's observed vitals sets the score. | The measured and reconstructed values for the largest errors |
 | Ensemble | Flags a patient when either trained member crosses its own ensemble threshold | Which member alerted and the evidence behind its score |
 
-The five methods have different score scales. A model's alert status is based on its own threshold. Explanations describe the evidence driving a score and support review of the measured readings.
+The five methods have different score scales. Each method uses its own threshold. The nurse workflow combines the ensemble alert with independent clinical limits and data completeness.
 
 ### Clinical references
 
@@ -48,7 +61,7 @@ Training, validation, and testing use **30, 10, and 10 different patients**. Pre
 | GRU autoencoder | 16/17 | 55.7% | 61.1% | 28 |
 | Ensemble | 17/17 | 81.0% | 69.6% | 28 |
 
-XGBoost and the ensemble gave identical held-out alerts on this seed. XGBoost and the ensemble also flagged 11 of 12 gradual episodes before their planned peak. These measurements describe the synthetic benchmark. Short-history scoring in the form is available for demonstration. The headline metrics use the mature-history test period.
+XGBoost and the ensemble gave identical held-out alerts on this seed. They also flagged 11 of 12 gradual episodes before their planned peak. The table evaluates the individual scoring methods and ensemble on the synthetic test split. The nurse view adds a separate clinical priority and completeness policy.
 
 ## Run locally and reproduce training
 
@@ -72,6 +85,7 @@ python train_kaggle.py --output-dir models
 python export_site_data.py
 python export_browser_models.py --artifacts models
 python -m unittest -v
+node --test test_triage.js
 ```
 
 The browser uses the exported XGBoost trees and GRU weights. The static deployment runs on GitHub Pages. Local scoring can run offline once the assets are available. The app uses open-source libraries and has no metered inference API or application server cost.
