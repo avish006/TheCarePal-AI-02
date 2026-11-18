@@ -22,8 +22,8 @@
       <div class="tech-section-head">
         <div><h2 id="technical-metrics-title">Model performance</h2>
           <p>Compare final detector metrics on validation and held-out test patients.</p></div>
-        <label class="date-wrap" for="technical-split">Evaluation split
-          <select id="technical-split">
+        <label class="date-wrap" for="technical-split"><span id="technical-split-label">Evaluation split</span>
+          <select id="technical-split" aria-labelledby="technical-split-label">
             <option value="test">Held-out test</option><option value="validation">Validation</option>
           </select></label>
       </div>
@@ -43,8 +43,8 @@
       <details class="tech-breakdown">
         <summary>Episode breakdown by type</summary>
         <div class="tech-breakdown-content">
-          <label class="date-wrap" for="technical-approach">Approach
-            <select id="technical-approach">${Object.entries(methods).map(([id, label]) =>
+          <label class="date-wrap" for="technical-approach"><span id="technical-approach-label">Approach</span>
+            <select id="technical-approach" aria-labelledby="technical-approach-label">${Object.entries(methods).map(([id, label]) =>
               `<option value="${id}">${label}</option>`).join("")}</select></label>
           <div class="tech-table-wrap" tabindex="0" aria-label="Scroll episode breakdown table">
             <table class="tech-table">

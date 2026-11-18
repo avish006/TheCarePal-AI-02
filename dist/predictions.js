@@ -63,17 +63,17 @@
         <p>Scores use readings through the selected date and each approach’s own alert threshold.</p>
       </header>
       <div class="tech-toolbar">
-        <label>Patient
-          <select data-pred-filter="patient">
+        <label><span id="tech-pred-patient-label">Patient</span>
+          <select data-pred-filter="patient" aria-labelledby="tech-pred-patient-label">
             <option value="">All patients</option>
             ${options(patients.map(patient => patient.patient_id), id => id)}
           </select>
         </label>
-        <label>Date
-          <select data-pred-filter="date"><option value="">All dates</option>${options(dates, date => date)}</select>
+        <label><span id="tech-pred-date-label">Date</span>
+          <select data-pred-filter="date" aria-labelledby="tech-pred-date-label"><option value="">All dates</option>${options(dates, date => date)}</select>
         </label>
-        <label>Rows per page
-          <select data-pred-filter="size"><option value="50">50</option><option value="25">25</option></select>
+        <label><span id="tech-pred-size-label">Rows per page</span>
+          <select data-pred-filter="size" aria-labelledby="tech-pred-size-label"><option value="50">50</option><option value="25">25</option></select>
         </label>
       </div>
       <details class="tech-pred-thresholds">
