@@ -1,0 +1,120 @@
+.care-trend {
+  --trend-review: #a33139;
+  --trend-warning: #875504;
+  margin: 0;
+  min-width: 0;
+}
+
+.care-trend-chart {
+  width: 100%;
+  min-height: 112px;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.care-trend-chart text {
+  fill: var(--muted, #435b50);
+  font-family: inherit;
+  font-size: 11px;
+}
+
+.care-trend-grid {
+  stroke: #dce8df;
+  stroke-width: 1;
+}
+
+.care-trend-line {
+  fill: none;
+  stroke: #267357;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.care-trend-point {
+  fill: #267357;
+  stroke: #fff;
+  stroke-width: 1.1;
+}
+
+.care-trend-review-reading { fill: var(--trend-review); }
+.care-trend-warning-reading { fill: var(--trend-warning); }
+
+.care-trend-review {
+  --alert-ink: var(--trend-review);
+  --alert-background: #fff0ef;
+  --alert-border: #efc6c5;
+}
+
+.care-trend-warning {
+  --alert-ink: var(--trend-warning);
+  --alert-background: #fff5d9;
+  --alert-border: #ead59e;
+}
+
+.care-trend-band { fill: var(--alert-background); }
+
+.care-trend-guide {
+  stroke: var(--alert-ink);
+  stroke-width: 1;
+  stroke-dasharray: 2.4 2.4;
+  opacity: .55;
+}
+
+.care-trend-alert-shape { fill: var(--alert-ink); }
+
+.care-trend-caption {
+  display: grid;
+  gap: 6px;
+  margin-top: .35rem;
+}
+
+.care-trend-caption p {
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--ink, #182e27);
+}
+
+.care-trend-dates {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.care-trend-date {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 35px;
+  padding: 4px 8px;
+  border: 1px solid var(--alert-border);
+  border-radius: 7px;
+  color: var(--alert-ink);
+  background: var(--alert-background);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.care-trend-date:hover { border-color: var(--alert-ink); }
+.care-trend-date time { font-weight: 720; }
+
+.care-trend-chip-shape {
+  flex: 0 0 6px;
+  height: 6px;
+  background: var(--alert-ink);
+}
+
+.care-trend-review .care-trend-chip-shape { border-radius: 50%; }
+.care-trend-warning .care-trend-chip-shape { transform: rotate(45deg); }
+
+.care-trend-empty {
+  padding-block: 8px;
+  color: var(--muted, #435b50);
+  font-size: 13px;
+}
