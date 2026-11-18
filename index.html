@@ -9,9 +9,12 @@
   <link rel="stylesheet" href="./styles.css">
   <link rel="stylesheet" href="./intake.css">
   <link rel="stylesheet" href="./vital-chart.css">
+  <link rel="stylesheet" href="./technical.css">
   <script src="./models.js" defer></script>
   <script src="./triage.js" defer></script>
   <script src="./vital-chart.js" defer></script>
+  <script src="./predictions.js" defer></script>
+  <script src="./technical.js" defer></script>
   <script src="./app.js" defer></script>
   <script src="./intake.js" defer></script>
 </head>
@@ -26,6 +29,7 @@
       <nav class="primary-nav" aria-label="Workspace">
         <a href="#monitoring" data-view="monitoring" aria-current="page">Review queue</a>
         <a href="#intake" data-view="intake">Check patient readings</a>
+        <a href="#technical" data-view="technical">Technical dashboard</a>
       </nav>
       <span class="demo"><span aria-hidden="true"></span>Synthetic data</span>
     </div>
@@ -71,6 +75,17 @@
         <div><h1 id="intake-title">Check patient readings</h1><p>Enter dated readings for a synthetic patient to assess the latest day.</p></div>
       </header>
       <div id="intake-root"></div>
+    </section>
+    <section id="technical-panel" aria-labelledby="technical-title" hidden>
+      <header class="heading">
+        <div><h1 id="technical-title">Technical dashboard</h1>
+          <p>Daily detector outputs and benchmark performance on the synthetic cohort.</p></div>
+      </header>
+      <p id="technical-status" class="status" role="status">Loading predictions and benchmark data…</p>
+      <div id="technical-content" hidden>
+        <section id="technical-metrics" class="panel tech-card" aria-labelledby="technical-metrics-title"></section>
+        <section id="technical-predictions" class="panel tech-card" aria-label="Patient-day predictions"></section>
+      </div>
     </section>
     <footer><span>For synthetic data exploration and education. This demonstration does not diagnose conditions or replace clinical judgment.</span></footer>
   </main>
